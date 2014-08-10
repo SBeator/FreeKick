@@ -5,7 +5,7 @@ USING_NS_CC;
 
 bool GameScene::init()
 {
-    if (!Scene::init())
+    if (!Scene::init() || !Scene::initWithPhysics())
     {
         return false;
     }
