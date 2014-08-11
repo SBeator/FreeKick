@@ -33,7 +33,7 @@ void BallSprite::update(float fDelta)
     auto velocity = _physicsBody->getVelocity();
     auto speed = velocity.getLength();
 
-    _physicsBody->setAngularVelocity(ROTATE_FACTOR * _arcForce * speed);
+    _physicsBody->setAngularVelocity(ROTATE_FACTOR * _arcDirection * speed);
     _physicsBody->setVelocity(velocity.rotateByAngle(Point(0, 0), ARC_FACTOR * _arcForce * speed));
 }
 
@@ -51,4 +51,5 @@ void BallSprite::shoot(Point shootForce, float arcForce)
                         ? arcForce  
                         : -MAX_ARC_FORCE
                     : MAX_ARC_FORCE;
+    _arcDirection = _arcForce > 0 ? 1 : -1;
 }

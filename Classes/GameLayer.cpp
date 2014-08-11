@@ -1,5 +1,6 @@
 #include "GameLayer.h"
 #include "ResourcesLoader.h"
+#include "DoorSprite.h"
 
 USING_NS_CC;
 
@@ -23,6 +24,12 @@ bool GameLayer::init()
     ball->setPosition(Point(100,300));
     _ball = ball;
     this->addChild(_ball);
+
+    // door
+    auto door = DoorSprite::create();
+    door->setAnchorPoint(Point(0.5, 0));
+    door->setPosition(Point(LAYER_WIDTH / 2, GOAL_LINE_POSITION_Y));
+    this->addChild(door);
 
     // Register Touch Event
     auto listener = EventListenerTouchOneByOne::create();

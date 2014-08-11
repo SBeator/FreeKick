@@ -5,7 +5,7 @@
 USING_NS_CC;
 
 #define BALL_RADIUS 10
-#define ROTATE_FACTOR 0.04
+#define ROTATE_FACTOR 0.05
 #define ARC_FACTOR 0.00000006
 #define SHOOT_FACTOR 0.4
 #define DAMPING 0.2f
@@ -25,6 +25,7 @@ private:
     Speed* _rotationAction;
     PhysicsBody* _physicsBody;
     float _arcForce;
+    int _arcDirection;
 
     virtual void update(float fDelta);
 };

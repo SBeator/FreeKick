@@ -27,6 +27,7 @@ void ResourcesLoader::loadResources()
 
     this->loadImage("Playground");
     this->loadImage("Ball");
+    this->loadImage("Door");
 }
 
 void ResourcesLoader::loadImage(string key){

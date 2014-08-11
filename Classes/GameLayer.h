@@ -5,6 +5,10 @@
 
 USING_NS_CC;
 
+#define LAYER_WIDTH 576
+#define LAYER_HEIGHT 1024
+#define GOAL_LINE_POSITION_Y 864
+
 class GameLayer : public Layer
 {
 public:
