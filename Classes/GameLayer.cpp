@@ -1,6 +1,5 @@
 #include "GameLayer.h"
 #include "ResourcesLoader.h"
-#include "DoorSprite.h"
 
 USING_NS_CC;
 
@@ -27,9 +26,13 @@ bool GameLayer::init()
 
     // door
     auto door = DoorSprite::create();
-    door->setAnchorPoint(Point(0.5, 0));
-    door->setPosition(Point(LAYER_WIDTH / 2, GOAL_LINE_POSITION_Y));
+    door->setPosition(Point(LAYER_WIDTH / 2, GOAL_LINE_POSITION_Y + DOOR_HEIGHT / 2));
     this->addChild(door);
+
+    _doorRect = door->getBoundingBox();
+    _playgroundRect = Rect(0, 0, LAYER_WIDTH, GOAL_LINE_POSITION_Y);
+
+    _gameStatus = GAME_STATUS_READY;
 
     // Register Touch Event
     auto listener = EventListenerTouchOneByOne::create();
@@ -39,15 +42,59 @@ bool GameLayer::init()
     listener->onTouchEnded = CC_CALLBACK_2(GameLayer::onTouchEnded, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
+    // Register contact event
+    auto contactListener = EventListenerPhysicsContact::create();
+    contactListener->onContactBegin = CC_CALLBACK_1(GameLayer::onContactBegin, this);
+    this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
+
+    this->scheduleUpdate();
+
     return true;
 }
 
+bool GameLayer::isGoal()
+{
+    Point ballPoint = _ball->getPosition();
+
+    return _doorRect.containsPoint(ballPoint);
+}
+
+bool GameLayer::isGameOver()
+{
+    Point ballPoint = _ball->getPosition();
+
+    return !_playgroundRect.containsPoint(ballPoint);
+}
+
+void GameLayer::update(float fDelta)
+{
+    if (_gameStatus == GAME_STATUS_SHOOTING)
+    {
+        if (this->isGoal())
+        {
+            _ball->goal();
+            _gameStatus = GAME_STATUS_GOAL;
+        }
+        else if (this->isGameOver())
+        {
+            _gameStatus = GAME_STATUS_OVER;
+        }
+    }
+    
+}
+
+
 bool GameLayer::onTouchBegan(Touch *touch, Event *unused_event)
 {
-    _touchMovePoints.clear();
-    gettimeofday(&_timeTouch, NULL);
+    if (_gameStatus == GAME_STATUS_READY)
+    {
+        _touchMovePoints.clear();
+        gettimeofday(&_timeTouch, NULL);
 
-    return true;
+        return true;
+    }
+    
+    return false;
 }
 
 void GameLayer::onTouchMoved(Touch *touch, Event *unused_event)
@@ -77,6 +124,8 @@ void GameLayer::calTouch(Point beginPoint, Point endPoint, double deltaTime)
         return;
     }
 
+   // _gameStatus = GAME_STATUS_SHOOTING;
+
     int centerPointIndex = pointsNumber / 2;
     auto centerPoint = _touchMovePoints.at(centerPointIndex);
 
@@ -104,4 +153,12 @@ void GameLayer::calTouch(Point beginPoint, Point endPoint, double deltaTime)
     {
         _ball->shoot(shootForce, arcForce);
     }
+}
+
+bool GameLayer::onContactBegin(PhysicsContact& contact)
+{
+
+
+
+    return true;
 }

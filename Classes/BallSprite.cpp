@@ -16,10 +16,13 @@ bool BallSprite::init()
     this->initWithTexture(resourcesLoader->getTexture("Ball"));
 
     // physics body
+    PhysicsShape* shap = PhysicsShapeCircle::create(BALL_RADIUS);
+    shap->setTag(BALL_SHAPE_TAG);
     PhysicsBody *body = PhysicsBody::create();
-    body->addShape(PhysicsShapeCircle::create(BALL_RADIUS));
-    body->setDynamic(true);
+    body->addShape(shap);
     body->setLinearDamping(DAMPING);
+    body->setAngularDamping(DAMPING);
+    body->setMass(0);
     body->setGravityEnable(false);
     _physicsBody = body;
     this->setPhysicsBody(_physicsBody);
@@ -33,7 +36,6 @@ void BallSprite::update(float fDelta)
     auto velocity = _physicsBody->getVelocity();
     auto speed = velocity.getLength();
 
-    _physicsBody->setAngularVelocity(ROTATE_FACTOR * _arcDirection * speed);
     _physicsBody->setVelocity(velocity.rotateByAngle(Point(0, 0), ARC_FACTOR * _arcForce * speed));
 }
 
@@ -43,13 +45,22 @@ void BallSprite::shoot(Point shootForce, float arcForce)
     if (force > MAX_SHOOT_FORCE)
     {
         shootForce = shootForce * MAX_SHOOT_FORCE / force;
+        force = MAX_SHOOT_FORCE;
     }
 
     _physicsBody->setVelocity(shootForce * SHOOT_FACTOR);
+
     _arcForce = arcForce < MAX_ARC_FORCE
                     ? arcForce > -MAX_ARC_FORCE
                         ? arcForce  
                         : -MAX_ARC_FORCE
                     : MAX_ARC_FORCE;
     _arcDirection = _arcForce > 0 ? 1 : -1;
+
+    _physicsBody->setAngularVelocity(ROTATE_FACTOR * _arcDirection * force * SHOOT_FACTOR);
+}
+
+void BallSprite::goal()
+{
+    _physicsBody->setLinearDamping(DAMPING);
 }
