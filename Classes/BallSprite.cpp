@@ -62,5 +62,14 @@ void BallSprite::shoot(Point shootForce, float arcForce)
 
 void BallSprite::goal()
 {
+    _physicsBody->setLinearDamping(DAMPING * 10);
+}
+
+void BallSprite::resetToPosition(Point position)
+{
+    _physicsBody->setVelocity(Point::ZERO);
+    _physicsBody->setAngularVelocity(0);
     _physicsBody->setLinearDamping(DAMPING);
+
+    this->setPosition(position);
 }

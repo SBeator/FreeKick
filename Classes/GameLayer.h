@@ -3,20 +3,13 @@
 #include "cocos2d.h"
 #include "DoorSprite.h"
 #include "BallSprite.h"
+#include "GameStatus.h"
 
 USING_NS_CC;
 
 #define LAYER_WIDTH 576
 #define LAYER_HEIGHT 1024
 #define GOAL_LINE_POSITION_Y 864
-
-
-typedef enum _game_status {
-    GAME_STATUS_READY = 1,
-    GAME_STATUS_SHOOTING,
-    GAME_STATUS_GOAL,
-    GAME_STATUS_OVER,
-} GameStatus;
 
 class GameLayer : public Layer
 {
@@ -27,7 +20,10 @@ public:
 
     bool isGoal();
     bool isGameOver();
-    
+
+    void reset();
+
+    CC_PROPERTY(GameStatus*, _gameStatus, GameStatus);
 private:
     virtual void update(float fDelta);
 
@@ -38,7 +34,6 @@ private:
 
     bool onContactBegin(PhysicsContact& contact);
 
-    GameStatus _gameStatus;
 
     BallSprite* _ball;
     Rect _doorRect;

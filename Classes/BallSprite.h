@@ -20,6 +20,8 @@ public:
 
     virtual bool init();
 
+    void resetToPosition(Point position);
+
     void shoot(Point shootForce, float arcForce);
     void goal();
 

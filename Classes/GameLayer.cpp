@@ -32,7 +32,24 @@ bool GameLayer::init()
     _doorRect = door->getBoundingBox();
     _playgroundRect = Rect(0, 0, LAYER_WIDTH, GOAL_LINE_POSITION_Y);
 
-    _gameStatus = GAME_STATUS_READY;
+    return true;
+}
+
+void GameLayer::reset()
+{
+    _ball->resetToPosition(Point(100, 300));
+    _gameStatus->gameReady();
+}
+
+GameStatus* GameLayer::getGameStatus(void)
+{
+    return _gameStatus;
+}
+
+void GameLayer::setGameStatus(GameStatus* gameStatus)
+{
+    _gameStatus = gameStatus;
+    _gameStatus->gameReady();
 
     // Register Touch Event
     auto listener = EventListenerTouchOneByOne::create();
@@ -48,8 +65,6 @@ bool GameLayer::init()
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
 
     this->scheduleUpdate();
-
-    return true;
 }
 
 bool GameLayer::isGoal()
@@ -68,25 +83,24 @@ bool GameLayer::isGameOver()
 
 void GameLayer::update(float fDelta)
 {
-    if (_gameStatus == GAME_STATUS_SHOOTING)
+    if (_gameStatus->isShooting())
     {
         if (this->isGoal())
         {
             _ball->goal();
-            _gameStatus = GAME_STATUS_GOAL;
+            _gameStatus->gameGoal();
         }
         else if (this->isGameOver())
         {
-            _gameStatus = GAME_STATUS_OVER;
+            _gameStatus->gameOver();
         }
     }
-    
 }
 
 
 bool GameLayer::onTouchBegan(Touch *touch, Event *unused_event)
 {
-    if (_gameStatus == GAME_STATUS_READY)
+    if (_gameStatus->isReady())
     {
         _touchMovePoints.clear();
         gettimeofday(&_timeTouch, NULL);
@@ -124,7 +138,7 @@ void GameLayer::calTouch(Point beginPoint, Point endPoint, double deltaTime)
         return;
     }
 
-   // _gameStatus = GAME_STATUS_SHOOTING;
+    _gameStatus->gameShooting();
 
     int centerPointIndex = pointsNumber / 2;
     auto centerPoint = _touchMovePoints.at(centerPointIndex);
