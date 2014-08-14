@@ -73,3 +73,11 @@ void BallSprite::resetToPosition(Point position)
 
     this->setPosition(position);
 }
+
+bool BallSprite::isStopped()
+{
+    auto velocity = _physicsBody->getVelocity();
+    auto speed = velocity.getLength();
+
+    return speed < 10;
+}

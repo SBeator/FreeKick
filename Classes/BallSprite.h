@@ -25,6 +25,8 @@ public:
     void shoot(Point shootForce, float arcForce);
     void goal();
 
+    bool isStopped();
+
 private:
     Speed* _rotationAction;
     PhysicsBody* _physicsBody;

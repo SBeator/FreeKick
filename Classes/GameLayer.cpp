@@ -1,5 +1,6 @@
 #include "GameLayer.h"
 #include "ResourcesLoader.h"
+#include "PlayerSprite.h"
 
 USING_NS_CC;
 
@@ -23,6 +24,15 @@ bool GameLayer::init()
     ball->setPosition(Point(100,300));
     _ball = ball;
     this->addChild(_ball);
+
+    // player
+    auto player1 = PlayerSprite::create();
+    player1->setPosition(Point(170, 600));
+    this->addChild(player1);
+
+    auto player2 = PlayerSprite::create();
+    player2->setPosition(Point(200, 600));
+    this->addChild(player2);
 
     // door
     auto door = DoorSprite::create();
@@ -78,7 +88,7 @@ bool GameLayer::isGameOver()
 {
     Point ballPoint = _ball->getPosition();
 
-    return !_playgroundRect.containsPoint(ballPoint);
+    return !_playgroundRect.containsPoint(ballPoint) || _ball->isStopped();
 }
 
 void GameLayer::update(float fDelta)

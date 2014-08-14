@@ -28,6 +28,8 @@ void ResourcesLoader::loadResources()
     this->loadImage("Playground");
     this->loadImage("Ball");
     this->loadImage("Door");
+    this->loadImage("Player");
+
     this->loadImage("Goal");
     this->loadImage("Fail");
     this->loadImage("Reset");
