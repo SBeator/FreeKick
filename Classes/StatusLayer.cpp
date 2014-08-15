@@ -63,4 +63,5 @@ void StatusLayer::resetGame()
     _statusMenu->setVisible(false);
 
     _gameLayer->reset();
+    this->gameReady();
 }

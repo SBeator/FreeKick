@@ -1,6 +1,5 @@
 #include "GameLayer.h"
 #include "ResourcesLoader.h"
-#include "PlayerSprite.h"
 
 USING_NS_CC;
 
@@ -21,9 +20,37 @@ bool GameLayer::init()
 
     // ball
     auto ball = BallSprite::create();
-    ball->setPosition(Point(100,300));
     _ball = ball;
     this->addChild(_ball);
+
+    // door
+    auto door = DoorSprite::create();
+    door->setPosition(Point(LAYER_WIDTH / 2, GOAL_LINE_POSITION_Y + DOOR_HEIGHT / 2));
+    this->addChild(door);
+
+    _doorRect = door->getBoundingBox();
+    _playgroundRect = Rect(0, 0, LAYER_WIDTH, GOAL_LINE_POSITION_Y);
+
+    this->reset();
+
+    return true;
+}
+
+void GameLayer::reset()
+{
+    _ball->resetToPosition(Point(100, 300));
+
+    this->resetPlayers();
+}
+
+void GameLayer::resetPlayers()
+{
+    for (auto player : _players)
+    {
+        player->removeFromParentAndCleanup(true);
+    }
+
+    _players.clear();
 
     // player
     auto player1 = PlayerSprite::create();
@@ -34,21 +61,8 @@ bool GameLayer::init()
     player2->setPosition(Point(200, 600));
     this->addChild(player2);
 
-    // door
-    auto door = DoorSprite::create();
-    door->setPosition(Point(LAYER_WIDTH / 2, GOAL_LINE_POSITION_Y + DOOR_HEIGHT / 2));
-    this->addChild(door);
-
-    _doorRect = door->getBoundingBox();
-    _playgroundRect = Rect(0, 0, LAYER_WIDTH, GOAL_LINE_POSITION_Y);
-
-    return true;
-}
-
-void GameLayer::reset()
-{
-    _ball->resetToPosition(Point(100, 300));
-    _gameStatus->gameReady();
+    _players.pushBack(player1);
+    _players.pushBack(player2);
 }
 
 GameStatus* GameLayer::getGameStatus(void)

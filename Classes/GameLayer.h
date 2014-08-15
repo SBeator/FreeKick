@@ -4,6 +4,7 @@
 #include "DoorSprite.h"
 #include "BallSprite.h"
 #include "GameStatus.h"
+#include "PlayerSprite.h"
 
 USING_NS_CC;
 
@@ -22,6 +23,7 @@ public:
     bool isGameOver();
 
     void reset();
+    void resetPlayers();
 
     CC_PROPERTY(GameStatus*, _gameStatus, GameStatus);
 private:
@@ -34,10 +36,10 @@ private:
 
     bool onContactBegin(PhysicsContact& contact);
 
-
     BallSprite* _ball;
     Rect _doorRect;
     Rect _playgroundRect;
+    Vector<PlayerSprite*> _players;
 
     struct timeval _timeTouch;
     std::vector<Point> _touchMovePoints;
