@@ -10,6 +10,7 @@ class ResourcesLoader
 public:
     static ResourcesLoader* getInstance();
 
+    Texture2D* getWelcomePage();
     void loadResources();
     Texture2D* getTexture(string key);
 
@@ -19,7 +20,7 @@ private:
     static TextureCache* _textureCache;
 
     ResourcesLoader();
-    void loadImage(string key);
+    Texture2D* loadImage(string key);
 
     Map<string, Texture2D*> _textureMap;
 };

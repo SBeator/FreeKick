@@ -1,24 +1,40 @@
+#include "WelcomeScence.h"
+#include "ResourcesLoader.h"
 #include "GameScene.h"
-#include "GameLayer.h"
-#include "StatusLayer.h"
 
 USING_NS_CC;
 
-bool GameScene::init()
+bool WelcomeScence::init()
 {
     if (!Scene::init() || !Scene::initWithPhysics())
     {
         return false;
     }
 
-    // Add the main game layer and status layer
-    auto statusLayer = StatusLayer::create();
-    auto gameLayer = GameLayer::create();
-    gameLayer->setGameStatus(statusLayer);
-    statusLayer->setGameLayer(gameLayer);
+    auto resourcesLoader = ResourcesLoader::getInstance();
+    auto welcomePage = Sprite::createWithTexture(resourcesLoader->getWelcomePage());
+    welcomePage->setAnchorPoint(Point::ZERO);
+    welcomePage->setPosition(Point::ZERO);
 
-    this->addChild(gameLayer);
-    this->addChild(statusLayer);
-    
+    this->addChild(welcomePage);
+
+    resourcesLoader->loadResources();
+
+    // Register Touch Event
+    auto listener = EventListenerTouchOneByOne::create();
+    listener->setSwallowTouches(true);
+    listener->onTouchBegan = CC_CALLBACK_2(WelcomeScence::onTouchBegan, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+
+
+    return true;
+}
+
+bool WelcomeScence::onTouchBegan(Touch *touch, Event *unused_event)
+{
+    auto scene = GameScene::create();
+
+    Director::getInstance()->replaceScene(scene);
+
     return true;
 }

@@ -18,6 +18,17 @@ ResourcesLoader* ResourcesLoader::getInstance()
     return _resourcesLoader;
 }
 
+Texture2D* ResourcesLoader::getWelcomePage()
+{
+    if (!_textureCache)
+    {
+        _textureCache = Director::getInstance()->getTextureCache();
+    }
+
+    auto page = this->loadImage("WelcomePage");
+    return page;
+}
+
 void ResourcesLoader::loadResources()
 {
     if (!_textureCache)
@@ -36,13 +47,15 @@ void ResourcesLoader::loadResources()
     this->loadImage("ResetPressed");
 }
 
-void ResourcesLoader::loadImage(string key){
+Texture2D* ResourcesLoader::loadImage(string key){
     auto texture = _textureCache->addImage("Images/" + key + ".png");
         
     if (texture != nullptr)
     {
         _textureMap.insert(key, texture);
     }
+
+    return texture;
 }
 
 Texture2D* ResourcesLoader::getTexture(string key)

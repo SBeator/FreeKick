@@ -4,10 +4,13 @@
 
 USING_NS_CC;
 
-class GameScene : public Scene
+class WelcomeScence : public Scene
 {
 public:
-    CREATE_FUNC(GameScene);
+    CREATE_FUNC(WelcomeScence);
 
     virtual bool init();
+
+private: 
+    virtual bool onTouchBegan(Touch *touch, Event *unused_event);
 };
